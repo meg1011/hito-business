@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>hito&hito | 企業向け写真撮影</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,300&display=swap" rel="stylesheet">
+  <style>
+    /* ===== RESET & BASE ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'Noto Sans JP', sans-serif;
+      background: #faf8f5;
+      color: #3a3530;
+      line-height: 1.8;
+    }
+
+    /* ===== TYPOGRAPHY ===== */
+    h1, h2, h3 { font-weight: 400; letter-spacing: 0.08em; }
+    p { font-size: 0.95rem; color: #6b6460; }
+
+    /* ===== NAV ===== */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.4rem 3rem;
+      background: rgba(250, 248, 245, 0.92);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid #e8e3dc;
+    }
+    .nav-logo {
+      font-size: 1.1rem;
+      letter-spacing: 0.15em;
+      color: #3a3530;
+      text-decoration: none;
+    }
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+    .nav-links a {
+      text-decoration: none;
+      color: #6b6460;
+      font-size: 0.82rem;
+      letter-spacing: 0.12em;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: #3a3530; }
+
+    /* ===== HERO ===== */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      text-align: center;
+      padding: 10rem 8vw 6rem;
+      background: #faf8f5;
+    }
+    .hero-inner {
+      max-width: 800px;
+      width: 100%;
+    }
+    .hero-eyebrow {
+      font-size: 1.1rem;
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-weight: 300;
+      letter-spacing: 0.15em;
+      color: #a09890;
+      margin-bottom: 3rem;
+    }
+    .hero h1 {
+      font-size: clamp(2.4rem, 5vw, 4rem);
+      line-height: 1.6;
+      color: #3a3530;
+      margin-bottom: 3rem;
+      font-weight: 300;
+    }
+    .hero-lead {
+      max-width: 480px;
+      margin: 0 auto;
+      font-size: 0.95rem;
+      color: #6b6460;
+      line-height: 2.2;
+    }
+    .hero-scroll {
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      color: #b5afa8;
+      margin-top: 6rem;
+    }
+    .hero-scroll::after {
+      content: '';
+      display: block;
+      width: 1px;
+      height: 60px;
+      background: #c8c2ba;
+      margin: 0.8rem auto 0;
+    }
+
+    /* ===== SECTION COMMON ===== */
+    section { padding: 10rem 8vw; }
+    .section-header {
+      text-align: center;
+      margin-bottom: 6rem;
+    }
+    .section-label {
+      font-size: 0.72rem;
+      letter-spacing: 0.3em;
+      color: #b5afa8;
+      text-transform: uppercase;
+      margin-bottom: 0.8rem;
+    }
+    .section-title {
+      font-size: 1.6rem;
+      color: #3a3530;
+      letter-spacing: 0.1em;
+    }
+    .section-desc {
+      max-width: 500px;
+      margin: 1rem auto 0;
+      font-size: 0.88rem;
+      color: #9a9490;
+    }
+
+    /* ===== GENRE GRID ===== */
+    .genre-section { background: #faf8f5; }
+    .genre-section:nth-child(even) { background: #f5f2ee; }
+
+    .genre-block {
+      max-width: 1100px;
+      margin: 0 auto 10rem;
+    }
+    .genre-block:last-child { margin-bottom: 0; }
+    .genre-label {
+      font-size: 0.72rem;
+      letter-spacing: 0.3em;
+      color: #b5afa8;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+    .genre-title {
+      font-size: 1.3rem;
+      color: #3a3530;
+      margin-bottom: 0.6rem;
+      letter-spacing: 0.08em;
+    }
+    .genre-text {
+      font-size: 0.88rem;
+      color: #9a9490;
+      margin-bottom: 2rem;
+      max-width: 480px;
+    }
+
+    /* Photo Grid */
+    .photo-grid {
+      display: grid;
+      gap: 0.8rem;
+    }
+    .photo-grid.cols-3 { grid-template-columns: repeat(2, 1fr); }
+    .photo-grid.cols-2-1 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .photo-grid.cols-1-2 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .photo-item {
+      position: relative;
+      overflow: hidden;
+      background: #ffffff;
+      aspect-ratio: 1/1;
+    }
+    .photo-item.tall { aspect-ratio: 1/1; }
+    .photo-item.wide { aspect-ratio: 1/1; }
+    .photo-item.square { aspect-ratio: 1/1; }
+
+    .photo-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      transition: transform 0.4s ease;
+      padding: 8px;
+    }
+    .photo-item:hover img { transform: scale(1.02); }
+
+    /* Placeholder for missing photos */
+    .photo-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #ede9e3;
+      color: #c0b8b0;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      gap: 0.5rem;
+      min-height: 200px;
+    }
+    .photo-placeholder .icon { font-size: 1.8rem; opacity: 0.4; }
+
+    /* ===== ABOUT ===== */
+    .about-section {
+      background: #3a3530;
+      color: #faf8f5;
+    }
+    .about-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1.5fr;
+      gap: 5rem;
+      align-items: center;
+    }
+    .about-photo {
+      aspect-ratio: 3/4;
+      background: #4a4540;
+      overflow: hidden;
+    }
+    .about-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .about-label {
+      font-size: 0.72rem;
+      letter-spacing: 0.3em;
+      color: #a09890;
+      text-transform: uppercase;
+      margin-bottom: 1.2rem;
+    }
+    .about-name {
+      font-size: 1.8rem;
+      color: #faf8f5;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.3rem;
+    }
+    .about-name-en {
+      font-size: 0.85rem;
+      color: #a09890;
+      letter-spacing: 0.2em;
+      margin-bottom: 2rem;
+    }
+    .about-text {
+      font-size: 0.9rem;
+      color: #c8c2ba;
+      line-height: 2.1;
+      margin-bottom: 2rem;
+    }
+    .about-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+    }
+    .tag {
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      color: #a09890;
+      border: 1px solid #5a5550;
+      padding: 0.3rem 0.8rem;
+    }
+
+    /* ===== SERVICES ===== */
+    .services-section { background: #f5f2ee; }
+    .services-grid {
+      max-width: 900px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+    }
+    .service-card {
+      padding: 2rem;
+      background: #faf8f5;
+      border-top: 2px solid #e8e3dc;
+    }
+    .service-num {
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      color: #c0b8b0;
+      margin-bottom: 1rem;
+    }
+    .service-name {
+      font-size: 1rem;
+      color: #3a3530;
+      margin-bottom: 0.8rem;
+      letter-spacing: 0.05em;
+    }
+    .service-text {
+      font-size: 0.83rem;
+      color: #9a9490;
+      line-height: 1.9;
+    }
+
+    /* ===== CONTACT ===== */
+    .contact-section {
+      background: #faf8f5;
+      text-align: center;
+    }
+    .contact-inner {
+      max-width: 560px;
+      margin: 0 auto;
+    }
+    .contact-lead {
+      font-size: 0.9rem;
+      color: #9a9490;
+      margin-bottom: 3rem;
+      line-height: 2;
+    }
+    .contact-btn {
+      display: inline-block;
+      padding: 1rem 3rem;
+      background: #1c3572;
+      color: #faf8f5;
+      text-decoration: none;
+      font-size: 0.85rem;
+      letter-spacing: 0.2em;
+      transition: background 0.2s;
+    }
+    .contact-btn:hover { background: #2a4a9e; }
+    .contact-info {
+      margin-top: 2.5rem;
+      font-size: 0.82rem;
+      color: #b5afa8;
+      letter-spacing: 0.05em;
+    }
+
+    /* ===== FOOTER ===== */
+    footer {
+      background: #3a3530;
+      color: #6b6460;
+      text-align: center;
+      padding: 2.5rem;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { gap: 1.5rem; }
+      .photo-grid.cols-3 { grid-template-columns: 1fr 1fr; }
+      .photo-grid.cols-2-1 { grid-template-columns: 1fr; }
+      .photo-grid.cols-2-1 .photo-item:first-child { grid-row: auto; }
+      .about-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+      .services-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#" class="nav-logo">
+      <img src="hito&hito_3.png" alt="hito&hito" style="height: 44px; width: auto;" onerror="this.style.display='none'; this.nextSibling.style.display='inline';">
+      <span style="display:none;">hito&amp;hito</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#works">WORKS</a></li>
+      <li><a href="#about">ABOUT</a></li>
+      <li><a href="#services">SERVICES</a></li>
+      <li><a href="#contact">CONTACT</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-inner">
+      <p class="hero-eyebrow">Business Photography</p>
+      <h1>
+        人と、ものと、<br>
+        その場の空気を撮る。
+      </h1>
+      <p class="hero-lead">
+        企業と商品の「らしさ」を写真で伝える。<br>
+        採用・商品・ブランディング・イベントまで、<br>
+        ナチュラルで上質なビジュアルをご提供します。
+      </p>
+      <p class="hero-scroll">scroll</p>
+    </div>
+  </section>
+
+  <!-- WORKS -->
+  <section id="works" style="padding: 7rem 2rem; background: #faf8f5;">
+    <div class="section-header">
+      <p class="section-label">Works</p>
+      <h2 class="section-title">撮影実績</h2>
+      <p class="section-desc">業種・ご用途別にご覧いただけます</p>
+    </div>
+
+    <!-- 01 採用・人物 -->
+    <div class="genre-block">
+      <p class="genre-label">01</p>
+      <h3 class="genre-title">採用・人物撮影</h3>
+      <p class="genre-text">働く人の自然な表情と空気感を。採用ページ・Wantedly・社員紹介に。</p>
+      <div class="photo-grid cols-3">
+        <div class="photo-item"><img src="photo/%E4%BA%BA%E7%89%A9/2203150030.jpg" alt="採用撮影" loading="lazy"></div>
+        <div class="photo-item"><img src="photo/%E4%BA%BA%E7%89%A9/201212_1_0027.jpg" alt="採用撮影" loading="lazy"></div>
+        <div class="photo-item"><img src="photo/%E4%BA%BA%E7%89%A9/210728_0389.jpg" alt="採用撮影" loading="lazy"></div>
+        <div class="photo-item"><img src="photo/%E4%BA%BA%E7%89%A9/2203020055.jpg" alt="採用撮影" loading="lazy"></div>
+        <div class="photo-item"><img src="photo/%E4%BA%BA%E7%89%A9/210728_0548.jpg" alt="採用撮影" loading="lazy"></div>
+        <div class="photo-item"><img src="photo/%E4%BA%BA%E7%89%A9/Z52_8079.jpg" alt="採用撮影" loading="lazy"></div>
+        <div class="photo-item"><img src="photo/%E4%BA%BA%E7%89%A9/250727-430.jpg" alt="採用撮影" loading="lazy"></div>
+        <div class="photo-item"><img src="photo/%E4%BA%BA%E7%89%A9/180114_054.jpg" alt="採用撮影" loading="lazy"></div>
+      </div>
+    </div>
+
+    <!-- 02 EC・商品 -->
+    <div class="genre-block">
+      <p class="genre-label">02</p>
+      <h3 class="genre-title">EC・商品撮影</h3>
+      <p class="genre-text">素材感・質感・世界観まで伝わる商品写真。ECサイト・カタログ・SNSに。</p>
+      <div class="photo-grid cols-3">
+        <div class="photo-item"><img src="photo/BDS_3485.jpg" alt="商品撮影" loading="lazy"></div>
+        <div class="photo-item"><img src="photo/BDS_3502.jpg" alt="商品撮影" loading="lazy"></div>
+        <div class="photo-item"><img src="photo/BDS_1665.jpg" alt="商品撮影" loading="lazy"></div>
+        <div class="photo-item"><img src="photo/CDS_3571.jpg" alt="商品撮影" loading="lazy"></div>
+        <div class="photo-item"><img src="photo/CDS_3576.jpg" alt="商品撮影" loading="lazy"></div>
+        <div class="photo-item"><img src="photo/DSC_7825.jpg" alt="商品撮影" loading="lazy"></div>
+        <div class="photo-item"><img src="photo/DSC_0309.JPG" alt="商品撮影" loading="lazy"></div>
+        <div class="photo-item"><img src="photo/DSC_0329.jpg" alt="商品撮影" loading="lazy"></div>
+        <div class="photo-item"><img src="photo/BDS_4562.jpg" alt="商品撮影" loading="lazy"></div>
+        <div class="photo-item"><img src="photo/DSC_9319.jpg" alt="商品撮影" loading="lazy"></div>
+        <div class="photo-item"><img src="photo/ADS_3446.jpg" alt="商品撮影" loading="lazy"></div>
+        <div class="photo-item"><img src="photo/DSC_7157.jpg" alt="商品撮影" loading="lazy"></div>
+      </div>
+    </div>
+
+    <!-- 03 飲食・フード -->
+    <div class="genre-block">
+      <p class="genre-label">03</p>
+      <h3 class="genre-title">飲食・フード撮影</h3>
+      <p class="genre-text">おいしさと温かみが伝わる。飲食店・食品ブランド・お弁当ECに。</p>
+      <div class="photo-grid cols-3">
+        <div class="photo-item"><img src="photo/%E6%96%99%E7%90%86/211118_0092.jpg" alt="料理撮影" loading="lazy"></div>
+        <div class="photo-item"><img src="photo/%E6%96%99%E7%90%86/211118_0074.jpg" alt="料理撮影" loading="lazy"></div>
+        <div class="photo-item"><img src="photo/%E6%96%99%E7%90%86/211118_0054.jpg" alt="料理撮影" loading="lazy"></div>
+        <div class="photo-item"><img src="photo/%E6%96%99%E7%90%86/211118_0076.jpg" alt="料理撮影" loading="lazy"></div>
+        <div class="photo-item"><img src="photo/%E6%96%99%E7%90%86/230327_056.jpg" alt="料理撮影" loading="lazy"></div>
+        <div class="photo-item"><img src="photo/%E6%96%99%E7%90%86/230327_072.jpg" alt="料理撮影" loading="lazy"></div>
+      </div>
+    </div>
+
+
+    <!-- 04 ライフスタイル -->
+    <div class="genre-block">
+      <p class="genre-label">04</p>
+      <h3 class="genre-title">ライフスタイル・イメージ</h3>
+      <p class="genre-text">ブランドの世界観・空気感を表現する。雑貨・アパレル・暮らし系のビジュアルに。</p>
+      <div class="photo-grid cols-3">
+        <div class="photo-item"><img src="photo/DSC_5695.jpg" alt="ライフスタイル" loading="lazy"></div>
+        <div class="photo-item"><img src="photo/CDS_3554.jpg" alt="ライフスタイル" loading="lazy"></div>
+        <div class="photo-item"><img src="photo/hito%26hito%20%E9%A2%A8%E6%99%AF-%E5%B0%8F%E7%89%A9/DSC_1968.jpg" alt="ライフスタイル" loading="lazy"></div>
+        <div class="photo-item"><img src="photo/CDS_3564.jpg" alt="ライフスタイル" loading="lazy"></div>
+        <div class="photo-item"><img src="photo/hito%26hito%20%E9%A2%A8%E6%99%AF-%E5%B0%8F%E7%89%A9/DSC_2052.jpg" alt="ライフスタイル" loading="lazy"></div>
+        <div class="photo-item"><img src="photo/hito%26hito%20%E9%A2%A8%E6%99%AF-%E5%B0%8F%E7%89%A9/Z62_2178.jpg" alt="ライフスタイル" loading="lazy"></div>
+        <div class="photo-item"><img src="photo/DSC_0668.jpg" alt="ライフスタイル" loading="lazy"></div>
+        <div class="photo-item"><img src="photo/%E3%82%B9%E3%83%8A%E3%83%83%E3%83%97/_ADS6822.jpg" alt="ライフスタイル" loading="lazy"></div>
+        <div class="photo-item"><img src="photo/%E3%82%B9%E3%83%8A%E3%83%83%E3%83%97/DSC_7974.jpg" alt="ライフスタイル" loading="lazy"></div>
+        <div class="photo-item"><img src="photo/%E3%82%B9%E3%83%8A%E3%83%83%E3%83%97/_ADS6940.jpg" alt="ライフスタイル" loading="lazy"></div>
+      </div>
+    </div>
+
+    <!-- 05 各種WEB媒体 -->
+    <div class="genre-block">
+      <p class="genre-label">05</p>
+      <h3 class="genre-title">各種WEB媒体の写真</h3>
+      <p class="genre-text">HP・SNS・採用サイト・ECなど、WEB媒体で使えるビジュアルを幅広く対応します。</p>
+      <div class="photo-grid cols-3">
+        <div class="photo-item"><img src="photo/%E4%BA%BA%E7%89%A9/230721_102.jpg" alt="WEB媒体" loading="lazy"></div>
+        <div class="photo-item"><img src="photo/%E4%BA%BA%E7%89%A9/230721_051.jpg" alt="WEB媒体" loading="lazy"></div>
+        <div class="photo-item"><img src="photo/%E4%BA%BA%E7%89%A9/191023_0040.jpg" alt="WEB媒体" loading="lazy"></div>
+        <div class="photo-item"><img src="photo/%E4%BA%BA%E7%89%A9/240218_015.jpg" alt="WEB媒体" loading="lazy"></div>
+        <div class="photo-item"><img src="photo/%E4%BA%BA%E7%89%A9/240218_009.jpg" alt="WEB媒体" loading="lazy"></div>
+        <div class="photo-item"><img src="photo/%E4%BA%BA%E7%89%A9/230721_084.jpg" alt="WEB媒体" loading="lazy"></div>
+        <div class="photo-item"><img src="photo/%E4%BA%BA%E7%89%A9/DSC_5021.jpg" alt="WEB媒体" loading="lazy"></div>
+        <div class="photo-item"><img src="photo/%E4%BA%BA%E7%89%A9/mm160208_0109_i.jpg" alt="WEB媒体" loading="lazy"></div>
+      </div>
+    </div>
+
+    <!-- 07 動画撮影 -->
+    <div class="genre-block">
+      <p class="genre-label">06</p>
+      <h3 class="genre-title">動画撮影・映像制作</h3>
+      <p class="genre-text">企業紹介・採用動画・ブランドムービーなど。写真と動画をまとめてご依頼いただけます。</p>
+      <div class="photo-grid cols-3" style="gap: 0.8rem;">
+        <div class="photo-item wide" style="grid-column: 1 / 3; aspect-ratio: 16/9; background: #2a2825; display:flex; align-items:center; justify-content:center;">
+          <div class="photo-placeholder" style="background: #2a2825; color: #7a7470;">
+            <!-- 動画埋め込み例: <iframe width="100%" height="100%" src="https://www.youtube.com/embed/XXXX" frameborder="0" allowfullscreen></iframe> -->
+            <span class="icon">🎬</span>
+            <span>動画①（YouTube埋め込み or サムネイル）</span>
+          </div>
+        </div>
+        <div class="photo-item">
+          <div class="photo-placeholder" style="background: #2a2825; color: #7a7470;">
+            <span class="icon">🎬</span>
+            <span>動画②</span>
+          </div>
+        </div>
+        <div class="photo-item">
+          <div class="photo-placeholder" style="background: #2a2825; color: #7a7470;">
+            <span class="icon">🎬</span>
+            <span>動画③</span>
+          </div>
+        </div>
+        <div class="photo-item">
+          <div class="photo-placeholder" style="background: #2a2825; color: #7a7470;">
+            <span class="icon">🎬</span>
+            <span>動画④</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ABOUT -->
+  <!-- CLIENTS -->
+  <section id="clients" style="background: #f5f2ee; padding: 8rem 8vw;">
+    <div class="section-header">
+      <p class="section-label">Clients</p>
+      <h2 class="section-title">撮影実績</h2>
+    </div>
+    <div style="max-width: 900px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 1.5rem 3rem; justify-content: center; align-items: center;">
+      <span style="font-size: 0.95rem; color: #6b6460; letter-spacing: 0.05em; white-space: nowrap;">外務省</span>
+      <span style="font-size: 0.95rem; color: #6b6460; letter-spacing: 0.05em; white-space: nowrap;">株式会社阪急交通社</span>
+      <span style="font-size: 0.95rem; color: #6b6460; letter-spacing: 0.05em; white-space: nowrap;">株式会社リクルート</span>
+      <span style="font-size: 0.95rem; color: #6b6460; letter-spacing: 0.05em; white-space: nowrap;">株式会社JTB</span>
+      <span style="font-size: 0.95rem; color: #6b6460; letter-spacing: 0.05em; white-space: nowrap;">学校法人新宿学園 新宿調理師専門学校</span>
+      <span style="font-size: 0.95rem; color: #6b6460; letter-spacing: 0.05em; white-space: nowrap;">コンテンツワークス株式会社</span>
+      <span style="font-size: 0.95rem; color: #6b6460; letter-spacing: 0.05em; white-space: nowrap;">株式会社OKAN</span>
+      <span style="font-size: 0.95rem; color: #6b6460; letter-spacing: 0.05em; white-space: nowrap;">ラヴィファクトリー</span>
+      <span style="font-size: 0.95rem; color: #6b6460; letter-spacing: 0.05em; white-space: nowrap;">ミネベアミツミ株式会社</span>
+      <span style="font-size: 0.95rem; color: #6b6460; letter-spacing: 0.05em; white-space: nowrap;">株式会社MAE</span>
+      <span style="font-size: 0.95rem; color: #6b6460; letter-spacing: 0.05em; white-space: nowrap;">株式会社ジャパンタイムズ</span>
+    </div>
+  </section>
+
+  <section id="about" class="about-section">
+    <div class="about-inner">
+      <div class="about-photo">
+        <div class="photo-placeholder" style="background: #4a4540; color: #6b6460;">
+          <span class="icon">📷</span>
+          <span>プロフィール写真</span>
+        </div>
+      </div>
+      <div>
+        <p class="about-label">Photographer</p>
+        <h2 class="about-name">松田 恵美</h2>
+        <p class="about-name-en">Emi Matsuda</p>
+        <p class="about-text">
+          プロフォトグラファー歴15年。富山出身、東京・小金井在住。<br><br>
+          穏やかで柔らかい、とよく言われます。でも撮影が始まるとスイッチが入ります。カメラを持つと止まらない。そういう人間です。<br><br>
+          興味を持ったことは、とりあえず一度やってみないと気が済まない性格で、DIYもインテリアコーディネートも、気づいたら資格まで取っていました。人が好きで、ものが好きで、その場の空気が好きです。<br><br>
+          「その人らしさ」「そのものらしさ」を自然な光のなかで切り取ることを大切にしています。
+        </p>
+        <div class="about-tags">
+          <span class="tag">富山出身</span>
+          <span class="tag">東京・小金井</span>
+          <span class="tag">DIY好き</span>
+          <span class="tag">インテリアコーディネーター</span>
+          <span class="tag">人が好き</span>
+          <span class="tag">出張可</span>
+        </div>
+        <div style="margin-top: 2rem; display: flex; flex-direction: column; gap: 0.7rem;">
+          <a href="https://hitoandhito.com/" target="_blank" style="font-size: 0.82rem; color: #a09890; letter-spacing: 0.1em; text-decoration: none; border-bottom: 1px solid #5a5550; padding-bottom: 0.2rem; width: fit-content;">
+            いち日写真館（出張撮影） →
+          </a>
+          <a href="https://www.mmatsudaphoto.com/" target="_blank" style="font-size: 0.82rem; color: #a09890; letter-spacing: 0.1em; text-decoration: none; border-bottom: 1px solid #5a5550; padding-bottom: 0.2rem; width: fit-content;">
+            富山の風景写真 →
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section id="services" class="services-section">
+    <div class="section-header">
+      <p class="section-label">Services</p>
+      <h2 class="section-title">撮影メニュー</h2>
+    </div>
+    <div class="services-grid" style="grid-template-columns: repeat(2, 1fr); max-width: 900px;">
+      <div class="service-card">
+        <p class="service-num">01</p>
+        <h3 class="service-name">採用・人物撮影</h3>
+        <p class="service-text">社員・スタッフ・代表のポートレート。Wantedly・採用ページ・社内報向け。自然な表情を引き出します。<br><br>
+        <span style="font-size:0.8rem; color:#b5afa8;">🚗 貴社へ出張しての撮影がメインです。東京近郊・関東エリア対応。</span></p>
+      </div>
+      <div class="service-card">
+        <p class="service-num">02</p>
+        <h3 class="service-name">商品・EC撮影</h3>
+        <p class="service-text">ECサイト・カタログ・SNS用の商品写真。素材感・質感・ブランドの世界観を大切に撮影します。<br><br>
+        <span style="font-size:0.8rem; color:#b5afa8;">📦 商品を送っていただいて撮影するスタイルも対応可能です。遠方の方もお気軽にご相談ください。</span></p>
+      </div>
+      <div class="service-card">
+        <p class="service-num">03</p>
+        <h3 class="service-name">ブランディング・イベント</h3>
+        <p class="service-text">会社の雰囲気・イベント・ライフスタイルシーンの撮影。HPトップ・SNS・広報資料に使えるビジュアルを提供します。</p>
+      </div>
+      <div class="service-card">
+        <p class="service-num">04</p>
+        <h3 class="service-name">動画撮影・映像制作</h3>
+        <p class="service-text">企業紹介・採用動画・ブランドムービーなど。写真と動画をまとめてご依頼いただけます。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="contact-section">
+    <div class="section-header">
+      <p class="section-label">Contact</p>
+      <h2 class="section-title">お問い合わせ</h2>
+    </div>
+    <div class="contact-inner">
+      <p class="contact-lead">
+        撮影のご相談・お見積りはお気軽にどうぞ。<br>
+        まずはオンラインでのカジュアルなお打ち合わせも歓迎しています。
+      </p>
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSdryIMZE3pOSm_JZx93wDvzpoJPJDVgIauWm6WByoTijdXglg/viewform?usp=header" target="_blank" class="contact-btn">お問い合わせフォームへ</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>&copy; 2026 hito&amp;hito / 松田恵美 Photography. All rights reserved.</p>
+  </footer>
+
+</body>
+</html>
