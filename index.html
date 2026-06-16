@@ -380,15 +380,96 @@
       letter-spacing: 0.1em;
     }
 
-    /* ===== RESPONSIVE ===== */
-    @media (max-width: 768px) {
-      nav { padding: 1rem 1.5rem; }
-      .nav-links { gap: 1.5rem; }
-      .photo-grid.cols-3 { grid-template-columns: 1fr 1fr; }
-      .photo-grid.cols-2-1 { grid-template-columns: 1fr; }
-      .photo-grid.cols-2-1 .photo-item:first-child { grid-row: auto; }
-      .about-inner { grid-template-columns: 1fr; gap: 2.5rem; }
-      .services-grid { grid-template-columns: 1fr; }
+    /* ===== HAMBURGER BUTTON ===== */
+    .nav-toggle {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 6px;
+      z-index: 101;
+    }
+    .nav-toggle span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: #3a3530;
+      transition: 0.25s;
+    }
+
+    /* ===== TABLET (≤900px) ===== */
+    @media (max-width: 900px) {
+      section { padding: 6rem 5vw; }
+      .hero { padding: 8rem 5vw 5rem; }
+      .section-header { margin-bottom: 4rem; }
+      .genre-block { margin-bottom: 6rem; }
+      .services-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    /* ===== MOBILE (≤600px) ===== */
+    @media (max-width: 600px) {
+      /* Nav */
+      nav { padding: 1rem 1.2rem; }
+      .nav-toggle { display: flex; }
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0; right: 0;
+        flex-direction: column;
+        background: rgba(250,248,245,0.98);
+        border-bottom: 1px solid #e8e3dc;
+        padding: 0.5rem 0;
+        gap: 0;
+        list-style: none;
+      }
+      .nav-links.open { display: flex; }
+      .nav-links li { border-top: 1px solid #f0ebe4; }
+      .nav-links a { display: block; padding: 0.9rem 1.5rem; font-size: 1rem; }
+
+      /* Hero */
+      .hero { padding: 7rem 5vw 4rem; min-height: 80vh; }
+      .hero h1 { font-size: 2rem; margin-bottom: 2rem; }
+      .hero-lead { font-size: 0.95rem; }
+      .hero-scroll { margin-top: 3rem; }
+
+      /* Sections */
+      section { padding: 4rem 5vw; }
+      .section-header { margin-bottom: 2.5rem; }
+      .section-title { font-size: 1.35rem; }
+
+      /* Genre blocks */
+      .genre-block { margin-bottom: 4rem; }
+      .photo-grid.cols-3 { grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+      .photo-grid { gap: 0.5rem; }
+
+      /* About */
+      .about-inner { grid-template-columns: 1fr; gap: 2rem; }
+      .about-photo { aspect-ratio: 4/3; }
+      .about-name { font-size: 1.6rem; }
+      .about-text { font-size: 0.95rem; }
+      .tag { font-size: 0.85rem; padding: 0.25rem 0.6rem; }
+
+      /* Services */
+      .services-grid { grid-template-columns: 1fr; max-width: 100%; }
+      .service-card { padding: 1.5rem; }
+      .service-name { font-size: 1.1rem; }
+
+      /* Contact */
+      .contact-btn { display: block; padding: 1rem; text-align: center; }
+      .contact-info { font-size: 0.9rem; }
+
+      /* Clients */
+      #clients { padding: 4rem 5vw; }
+    }
+
+    /* ===== VERY SMALL (≤380px) ===== */
+    @media (max-width: 380px) {
+      .photo-grid.cols-3 { grid-template-columns: 1fr; }
+      .hero h1 { font-size: 1.8rem; }
     }
   </style>
 </head>
@@ -400,7 +481,10 @@
       <img src="hito&hito_3.png" alt="hito&hito" style="height: 44px; width: auto;" onerror="this.style.display='none'; this.nextSibling.style.display='inline';">
       <span style="display:none;">hito&amp;hito</span>
     </a>
-    <ul class="nav-links">
+    <button class="nav-toggle" id="menuBtn" aria-label="メニューを開く">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="navLinks">
       <li><a href="#works">WORKS</a></li>
       <li><a href="#about">ABOUT</a></li>
       <li><a href="#services">SERVICES</a></li>
@@ -642,5 +726,15 @@
     <p>&copy; 2026 hito&amp;hito / 松田恵美 Photography. All rights reserved.</p>
   </footer>
 
+  <script>
+    const menuBtn = document.getElementById('menuBtn');
+    const navLinks = document.getElementById('navLinks');
+    menuBtn.addEventListener('click', () => {
+      navLinks.classList.toggle('open');
+    });
+    navLinks.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => navLinks.classList.remove('open'));
+    });
+  </script>
 </body>
 </html>
